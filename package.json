@@ -4,7 +4,7 @@
   "description": "Backend for app Amazin",
   "main": "app.js",
   "scripts": {
-    "start": "node build/index.js",
+    "start": "tsc && node build/index.js",
     "dev": "ts-node-dev src/index.ts",
     "tsc": "tsc"
   },
