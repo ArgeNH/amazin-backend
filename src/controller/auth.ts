@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import { generate } from 'generate-password-ts';
+import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 
 import User from '../models/User';
 import { transporter } from '../helpers/mail';
+import { generateJWT, UserToken } from '../helpers/jwt';
 
 export const signUp = async (req: Request, res: Response) => {
     const { email } = req.body;
@@ -20,7 +22,9 @@ export const signUp = async (req: Request, res: Response) => {
             numbers: true,
             symbols: true
         });
-        user.password = aleatoryPassword;
+
+        const salt = genSaltSync(10);
+        user.password = hashSync(aleatoryPassword, salt);
         await user.save();
 
         const mailOptions = {
@@ -37,7 +41,17 @@ export const signUp = async (req: Request, res: Response) => {
             else console.log(`Email sent: ${info.response}`);
         });
 
-        //without token yet
+        const userData: UserToken = {
+            id: user._id,
+            name: user.name,
+            lastName: user.lastName,
+            email: user.email,
+            role: user.role,
+            status: user.status,
+            fisrtLogin: user.fisrtLogin
+        };
+
+        const token: string | undefined = await generateJWT(userData);
 
         return res.status(201).json({
             success: true,
@@ -49,7 +63,8 @@ export const signUp = async (req: Request, res: Response) => {
                 role: user.role,
                 status: user.status,
                 fisrtLogin: user.fisrtLogin
-            }
+            },
+            token
         });
 
     } catch (error: any) {
@@ -61,4 +76,52 @@ export const signUp = async (req: Request, res: Response) => {
     }
 }
 
-export const signIn = (_req: Request, _res: Response) => { }
+export const signIn = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({
+            success: false,
+            message: 'The email is not registered'
+        });
+
+        const validPassword = compareSync(password, user.password);
+        if (!validPassword) return res.status(400).json({
+            success: false,
+            message: 'The password/email is incorrect'
+        });
+
+        const userData: UserToken = {
+            id: user._id,
+            name: user.name,
+            lastName: user.lastName,
+            email: user.email,
+            role: user.role,
+            status: user.status,
+            fisrtLogin: user.fisrtLogin
+        };
+
+        const token: string | undefined = await generateJWT(userData);
+
+        return res.status(201).json({
+            success: true,
+            message: 'User created successfully',
+            user: {
+                name: user.name,
+                lastName: user.lastName,
+                email: user.email,
+                role: user.role,
+                status: user.status,
+                fisrtLogin: user.fisrtLogin
+            },
+            token
+        });
+
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: 'Something went wrong',
+            error: error.message
+        });
+    }
+}

@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 
-interface UserToken {
+export interface UserToken {
     id: string;
     name: string;
     lastName: string;
     email: string;
     role: string;
-    status: string;
+    status: boolean;
     fisrtLogin: boolean;
 }
 
