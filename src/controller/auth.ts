@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { generate } from 'generate-password-ts';
 
 import User from '../models/User';
 import { transporter } from '../helpers/mail';
@@ -14,7 +15,11 @@ export const signUp = async (req: Request, res: Response) => {
 
         user = new User(req.body);
 
-        const aleatoryPassword: string = Math.random().toString(36).slice(-16);
+        const aleatoryPassword: string = generate({
+            length: 16,
+            numbers: true,
+            symbols: true
+        });
         user.password = aleatoryPassword;
         await user.save();
 
