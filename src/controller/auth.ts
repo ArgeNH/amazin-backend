@@ -103,9 +103,9 @@ export const signIn = async (req: Request, res: Response) => {
 
         const token: string | undefined = await generateJWT(userData);
 
-        return res.status(201).json({
+        return res.status(200).json({
             success: true,
-            message: 'User created successfully',
+            message: 'User logged in successfully',
             user: {
                 name: user.name,
                 lastName: user.lastName,
@@ -115,6 +115,35 @@ export const signIn = async (req: Request, res: Response) => {
                 fisrtLogin: user.fisrtLogin
             },
             token
+        });
+
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: 'Something went wrong',
+            error: error.message
+        });
+    }
+}
+
+export const updatePassword = async (req: Request, res: Response) => {
+    const { email } = req.params;
+    const { newPassword } = req.body;
+    try {
+        let user = await User.findOne({ email });
+        if (!user) return res.status(400).json({
+            success: false,
+            message: 'The email is not registered'
+        });
+
+        const salt: string = genSaltSync(10);
+        user.password = hashSync(newPassword, salt);
+        user.fisrtLogin = false;
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Password updated successfully'
         });
 
     } catch (error: any) {
