@@ -27,6 +27,9 @@ export const signUp = async (req: Request, res: Response) => {
         user.password = hashSync(aleatoryPassword, salt);
         await user.save();
 
+        user.oldPassword.push(user.password);
+        await user.save();
+
         const mailOptions = {
             from: 'ADMIN - AMAZIM',
             to: user.email,
@@ -41,31 +44,9 @@ export const signUp = async (req: Request, res: Response) => {
             else console.log(`Email sent: ${info.response}`);
         });
 
-        const userData: UserToken = {
-            id: user._id,
-            name: user.name,
-            lastName: user.lastName,
-            email: user.email,
-            role: user.role,
-            status: user.status,
-            fisrtLogin: user.fisrtLogin,
-            attempts: user.attempts
-        };
-
-        const token: string | undefined = await generateJWT(userData);
-
         return res.status(201).json({
             success: true,
-            message: 'User created successfully',
-            user: {
-                name: user.name,
-                lastName: user.lastName,
-                email: user.email,
-                role: user.role,
-                status: user.status,
-                fisrtLogin: user.fisrtLogin
-            },
-            token
+            message: 'User created successfully'
         });
 
     } catch (error: any) {
@@ -123,14 +104,6 @@ export const signIn = async (req: Request, res: Response) => {
         return res.status(200).json({
             success: true,
             message: 'User logged in successfully',
-            user: {
-                name: user.name,
-                lastName: user.lastName,
-                email: user.email,
-                role: user.role,
-                status: user.status,
-                fisrtLogin: user.fisrtLogin
-            },
             token
         });
 
@@ -153,8 +126,19 @@ export const updatePassword = async (req: Request, res: Response) => {
             message: 'The email is not registered'
         });
 
+        const result = user.oldPassword.some(old => compareSync(newPassword, old));
+        if (result) {
+            return res.status(400).json({
+                success: false,
+                message: 'The new password is the same as the old one'
+            });
+        } else {
+            user.oldPassword.pop();
+        }
+
         const salt: string = genSaltSync(10);
         user.password = hashSync(newPassword, salt);
+        user.oldPassword.unshift(user.password);
         user.fisrtLogin = false;
         await user.save();
 

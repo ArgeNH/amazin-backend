@@ -9,6 +9,7 @@ export interface User extends Document {
     status: boolean;
     fisrtLogin: boolean;
     attempts: number;
+    oldPassword: string[];
 }
 
 const UserSchema = new Schema<User>({
@@ -45,7 +46,11 @@ const UserSchema = new Schema<User>({
     attempts: {
         type: Number,
         default: 0
-    }
+    },
+    oldPassword: [{
+        type: String,
+        required: false
+    }]
 });
 
 export default model<User>('User', UserSchema);
