@@ -8,6 +8,7 @@ export interface User extends Document {
     role: string;
     status: boolean;
     fisrtLogin: boolean;
+    attempts: number;
 }
 
 const UserSchema = new Schema<User>({
@@ -40,6 +41,10 @@ const UserSchema = new Schema<User>({
     fisrtLogin: {
         type: Boolean,
         default: true
+    },
+    attempts: {
+        type: Number,
+        default: 0
     }
 });
 

@@ -8,6 +8,7 @@ export interface UserToken {
     role: string;
     status: boolean;
     fisrtLogin: boolean;
+    attempts: number;
 }
 
 const secret: string = `${process.env.JWT_SECRET}`;

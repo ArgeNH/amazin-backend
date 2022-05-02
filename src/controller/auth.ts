@@ -48,7 +48,8 @@ export const signUp = async (req: Request, res: Response) => {
             email: user.email,
             role: user.role,
             status: user.status,
-            fisrtLogin: user.fisrtLogin
+            fisrtLogin: user.fisrtLogin,
+            attempts: user.attempts
         };
 
         const token: string | undefined = await generateJWT(userData);
@@ -86,10 +87,25 @@ export const signIn = async (req: Request, res: Response) => {
         });
 
         const validPassword = compareSync(password, user.password);
-        if (!validPassword) return res.status(400).json({
-            success: false,
-            message: 'The password/email is incorrect'
-        });
+        if (!validPassword && user.status === true) {
+            if (user.attempts < 3) {
+                user.attempts += 1;
+                if (user.attempts === 3) user.status = false;
+                await user.save();
+                console.log(`Fallo de login ${user.attempts}`);
+            }
+            return res.status(400).json({
+                success: false,
+                message: 'The password/email is incorrect'
+            });
+        }
+
+        if (user.status === false) {
+            return res.status(400).json({
+                success: false,
+                message: 'Your account has been blocked contact with the administrator'
+            });
+        }
 
         const userData: UserToken = {
             id: user._id,
@@ -98,7 +114,8 @@ export const signIn = async (req: Request, res: Response) => {
             email: user.email,
             role: user.role,
             status: user.status,
-            fisrtLogin: user.fisrtLogin
+            fisrtLogin: user.fisrtLogin,
+            attempts: user.attempts
         };
 
         const token: string | undefined = await generateJWT(userData);
