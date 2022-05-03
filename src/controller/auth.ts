@@ -95,7 +95,7 @@ export const signIn = async (req: Request, res: Response) => {
             email: user.email,
             role: user.role,
             status: user.status,
-            fisrtLogin: user.fisrtLogin,
+            fisrtLogin: user.firstLogin,
             attempts: user.attempts
         };
 
@@ -104,6 +104,7 @@ export const signIn = async (req: Request, res: Response) => {
         return res.status(200).json({
             success: true,
             message: 'User logged in successfully',
+            user: user.firstLogin,
             token
         });
 
@@ -139,7 +140,7 @@ export const updatePassword = async (req: Request, res: Response) => {
         const salt: string = genSaltSync(10);
         user.password = hashSync(newPassword, salt);
         user.oldPassword.unshift(user.password);
-        user.fisrtLogin = false;
+        user.firstLogin = false;
         await user.save();
 
         return res.status(200).json({

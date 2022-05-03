@@ -7,7 +7,7 @@ export interface User extends Document {
     password: string;
     role: string;
     status: boolean;
-    fisrtLogin: boolean;
+    firstLogin: boolean;
     attempts: number;
     oldPassword: string[];
 }
@@ -39,7 +39,7 @@ const UserSchema = new Schema<User>({
         type: Boolean,
         default: true
     },
-    fisrtLogin: {
+    firstLogin: {
         type: Boolean,
         default: true
     },
