@@ -88,6 +88,9 @@ export const signIn = async (req: Request, res: Response) => {
             });
         }
 
+        user.attempts = 0;
+        await user.save();
+
         const userData: UserToken = {
             id: user._id,
             name: user.name,
@@ -95,7 +98,7 @@ export const signIn = async (req: Request, res: Response) => {
             email: user.email,
             role: user.role,
             status: user.status,
-            fisrtLogin: user.firstLogin,
+            firstLogin: user.firstLogin,
             attempts: user.attempts
         };
 
@@ -152,7 +155,7 @@ export const updatePassword = async (req: Request, res: Response) => {
             email: user.email,
             role: user.role,
             status: user.status,
-            fisrtLogin: user.firstLogin,
+            firstLogin: user.firstLogin,
             attempts: user.attempts
         };
 

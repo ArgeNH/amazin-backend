@@ -7,7 +7,7 @@ export interface UserToken {
     email: string;
     role: string;
     status: boolean;
-    fisrtLogin: boolean;
+    firstLogin: boolean;
     attempts: number;
 }
 
