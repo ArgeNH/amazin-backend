@@ -145,9 +145,23 @@ export const updatePassword = async (req: Request, res: Response) => {
         user.firstLogin = false;
         await user.save();
 
+        const userData: UserToken = {
+            id: user._id,
+            name: user.name,
+            lastName: user.lastName,
+            email: user.email,
+            role: user.role,
+            status: user.status,
+            fisrtLogin: user.firstLogin,
+            attempts: user.attempts
+        };
+
+        const token = await generateJWT(userData);
+
         return res.status(200).json({
             success: true,
-            message: 'Password updated successfully'
+            message: 'Password updated successfully',
+            token
         });
 
     } catch (error: any) {
