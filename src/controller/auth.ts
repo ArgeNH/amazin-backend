@@ -104,7 +104,9 @@ export const signIn = async (req: Request, res: Response) => {
         return res.status(200).json({
             success: true,
             message: 'User logged in successfully',
-            user: user.firstLogin,
+            user: {
+                firstLogin: user.firstLogin
+            },
             token
         });
 
