@@ -139,7 +139,7 @@ export const updatePassword = async (req: Request, res: Response) => {
                 message: 'The new password is the same as the old one'
             });
         } else {
-            user.oldPassword.pop();
+            if (user.oldPassword.length === 2) user.oldPassword.pop();
         }
 
         const salt: string = genSaltSync(10);
