@@ -3,8 +3,7 @@ import { generate } from 'generate-password-ts';
 import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 
 import User from '../models/User';
-import { transporter } from '../helpers/mail';
-import { generateJWT, UserToken } from '../helpers/jwt';
+import { generateJWT, transporter, UserToken } from '../helpers';
 
 export const signUp = async (req: Request, res: Response) => {
     const { email } = req.body;

@@ -18,4 +18,4 @@ router.get('/product/:id', getProduct);
 router.patch('/update-product/:id', updateProduct);
 router.delete('/delete-product/:id', deleteProduct);
 
-export default router;
+export { router as product }

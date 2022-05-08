@@ -7,7 +7,7 @@ import {
     updateUser,
     deleteUser
 } from '../controller/user';
-import { validate } from '../middlewares/paramValidator';
+import { validate } from '../middlewares';
 
 const router = Router();
 
@@ -34,4 +34,4 @@ router.delete('/delete/:email',
         validate
     ], deleteUser);
 
-export default router;
+export { router as user };

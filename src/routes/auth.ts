@@ -6,8 +6,8 @@ import {
     signUp,
     updatePassword,
 } from '../controller/auth';
-import { validate } from '../middlewares/paramValidator';
-import { passwordOptions } from '../utils/password-opt';
+import { validate } from '../middlewares';
+import { passwordOptions } from '../utils';
 
 const router = Router();
 
@@ -40,4 +40,4 @@ router.patch('/change-pass/:email',
         validate
     ], updatePassword);
 
-export default router;
+export { router as auth };

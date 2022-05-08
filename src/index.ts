@@ -3,9 +3,7 @@ import cors from 'cors';
 import 'dotenv/config';
 
 import './database/connectionDatabase';
-import auth from './routes/auth';
-import product from './routes/product';
-import user from './routes/user';
+import { auth, product, user } from './routes';
 
 const app: Application = express();
 
