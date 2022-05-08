@@ -2,11 +2,12 @@ import { Router } from 'express';
 import { check, param } from 'express-validator';
 
 import {
+    revalidateToken,
     signIn,
     signUp,
     updatePassword,
 } from '../controller/auth';
-import { validate } from '../middlewares';
+import { validate, validateToken } from '../middlewares';
 import { passwordOptions } from '../utils';
 
 const router = Router();
@@ -39,5 +40,7 @@ router.patch('/change-pass/:email',
             .isStrongPassword(passwordOptions).withMessage('The new password is not strong enough (min 8 characters, at least one uppercase, one lowercase, one number and one special character)'),
         validate
     ], updatePassword);
+
+router.get('/renew', validateToken, revalidateToken);
 
 export { router as auth };

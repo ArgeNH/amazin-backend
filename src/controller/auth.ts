@@ -174,3 +174,22 @@ export const updatePassword = async (req: Request, res: Response) => {
         });
     }
 }
+
+export const revalidateToken = async (req: Request, res: Response) => {
+    try {
+        const { user } = req;
+        const token = await generateJWT(user as UserToken);
+        return res.status(200).json({
+            success: true,
+            message: 'Token revalidated successfully',
+            token
+        });
+
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: 'Something went wrong',
+            error: error.message
+        });
+    }
+}
