@@ -5,7 +5,8 @@ import {
     getUser,
     getUsers,
     updateUser,
-    deleteUser
+    deleteUser,
+    forgotPassword
 } from '../controller/user';
 import { validate } from '../middlewares';
 
@@ -33,5 +34,12 @@ router.delete('/delete/:email',
             .isEmail().withMessage('The email is invalid'),
         validate
     ], deleteUser);
+
+router.post('/forgot-password',
+    [
+        check('email').notEmpty().withMessage('The email is required')
+            .isEmail().withMessage('The email is invalid'),
+        validate
+    ], forgotPassword);
 
 export { router as user };
