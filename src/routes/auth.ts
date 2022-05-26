@@ -2,10 +2,11 @@ import { Router } from 'express';
 import { check, param } from 'express-validator';
 
 import {
-    revalidateToken,
     signIn,
     signUp,
     updatePassword,
+    revalidateToken,
+    renewToken
 } from '../controller/auth';
 import { validate, validateToken } from '../middlewares';
 import { passwordOptions } from '../utils';
@@ -41,6 +42,8 @@ router.patch('/change-pass/:email',
         validate
     ], updatePassword);
 
-router.get('/renew', validateToken, revalidateToken);
+router.get('/validate-jwt', validateToken, revalidateToken);
+
+router.get('/renew', validateToken, renewToken);
 
 export { router as auth };

@@ -19,7 +19,18 @@ export const validateToken = (req: Request, res: Response, next: NextFunction) =
     const secret: string = `${process.env.JWT_SECRET}`;
 
     try {
-        const { user } = <jwt.JwtPayload>jwt.verify(token, secret);
+
+        const payload = <jwt.JwtPayload>jwt.verify(token, secret);
+        const user: UserToken = {
+            id: payload.id,
+            name: payload.name,
+            lastName: payload.lastName,
+            email: payload.email,
+            role: payload.role,
+            status: payload.status,
+            firstLogin: payload.firstLogin,
+            attempts: payload.attempts
+        }
         req.user = user;
 
     } catch (error: any) {
