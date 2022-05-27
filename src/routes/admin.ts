@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { check } from 'express-validator';
 
 import { validate } from '../middlewares';
-import { unlockUser } from '../controller/admin';
+import { getUsersBlocked, unlockUser } from '../controller/admin';
 
 const router = Router();
 
@@ -11,5 +11,7 @@ router.post('/unlock-user', [
         .isEmail().withMessage('The email is invalid'),
     validate
 ], unlockUser);
+
+router.get('/users-blocked', getUsersBlocked);
 
 export { router as admin };
