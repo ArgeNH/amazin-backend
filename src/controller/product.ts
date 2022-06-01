@@ -47,7 +47,25 @@ export const createProduct = async (req: Request, res: Response) => {
     }
 }
 
-export const getProducts = (_req: Request, _res: Response) => { }
+export const getProducts = async (_req: Request, res: Response) => {
+    try {
+        const product = await Product.find({});
+        if (!product) return res.status(400).json({
+            success: false,
+            message: 'Products not found'
+        });
+        return res.status(200).json({
+            success: true,
+            message: 'Products found successfully',
+            product
+        });
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+}
 
 export const getProduct = (_req: Request, _res: Response) => { }
 
