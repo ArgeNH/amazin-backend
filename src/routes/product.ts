@@ -14,8 +14,8 @@ const router = Router();
 
 router.post('/new-product', upload?.array('image', 1), createProduct);
 router.get('/products', getProducts);
-router.get('/product/:id', getProduct);
-router.patch('/update-product/:id', updateProduct);
-router.delete('/delete-product/:id', deleteProduct);
+router.get('/product/:code', getProduct);
+router.patch('/update-product/:code', updateProduct);
+router.delete('/delete-product/:code', deleteProduct);
 
 export { router as product }
