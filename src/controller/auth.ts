@@ -19,7 +19,8 @@ export const signUp = async (req: Request, res: Response) => {
         const aleatoryPassword: string = generate({
             length: 16,
             numbers: true,
-            symbols: true
+            symbols: true,
+            exclude: '\"\''
         });
 
         const salt = genSaltSync(10);
