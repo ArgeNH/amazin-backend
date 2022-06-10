@@ -12,14 +12,10 @@ v2.config({
 
 export const createProduct = async (req: Request, res: Response) => {
     const { name, description, price, stock, category } = req.body;
-    console.log(name, description, price, stock, category);
     try {
         const file = req?.files as Express.Multer.File[];
-
         const { public_id, secure_url } = await v2.uploader.upload(file[0].path);
-        console.log(public_id, secure_url);
         const uid = v4();
-        console.log(uid);
 
         const product = new Product({
             code: uid,
@@ -70,11 +66,14 @@ export const getProducts = async (_req: Request, res: Response) => {
 export const getProduct = async (req: Request, res: Response) => {
     const { code } = req.params;
     try {
+
         const product = await Product.findOne({ code });
+
         if (!product) return res.status(400).json({
             success: false,
             message: 'Product not found'
         });
+
         return res.status(200).json({
             success: true,
             message: 'Product found successfully',
@@ -91,12 +90,15 @@ export const getProduct = async (req: Request, res: Response) => {
 export const updateProduct = async (req: Request, res: Response) => {
     try {
         const { code } = req.params;
+        console.log(code)
         const { name, description, price, stock, category } = req.body;
         const product = await Product.findOneAndUpdate({ code }, { name, description, price, stock, category }, { new: true });
+        console.log(product)
         if (!product) return res.status(400).json({
             success: false,
             message: 'Product not found'
         });
+
         return res.status(200).json({
             success: true,
             message: 'Product updated successfully',
@@ -109,17 +111,18 @@ export const updateProduct = async (req: Request, res: Response) => {
             message: error.message
         });
     }
-
 }
 
 export const deleteProduct = async (req: Request, res: Response) => {
     try {
         const { code } = req.params;
         const product = await Product.findOneAndDelete({ code });
+
         if (!product) return res.status(400).json({
             success: false,
             message: 'Product not found'
         });
+
         return res.status(200).json({
             success: true,
             message: 'Product deleted successfully',
@@ -130,5 +133,4 @@ export const deleteProduct = async (req: Request, res: Response) => {
             message: error.message
         });
     }
-
 }
