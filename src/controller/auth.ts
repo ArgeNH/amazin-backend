@@ -16,12 +16,20 @@ export const signUp = async (req: Request, res: Response) => {
 
         user = new User(req.body);
 
-        const aleatoryPassword: string = generate({
-            length: 16,
+        let aleatoryPassword: string = generate({
+            length: 12,
             numbers: true,
             symbols: true,
             exclude: '\"\''
         });
+
+        if(aleatoryPassword.includes('\\') || 
+        aleatoryPassword.includes('\'') || 
+        aleatoryPassword.includes('\"') ||
+        aleatoryPassword.includes('\`')
+        ) {
+            aleatoryPassword = aleatoryPassword.replace(/[\\\'\"\`]/gm, 'h')
+        }
 
         const salt = genSaltSync(10);
         user.password = hashSync(aleatoryPassword, salt);
