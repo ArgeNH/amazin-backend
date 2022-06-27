@@ -19,5 +19,5 @@ app.use('/api/user', user);
 app.use('/api/admin', admin);
 
 app.listen(app.get('port'), () => {
-    console.log('Server on port', app.get('port'));
+    console.log(`Server on port ${app.get('port')}`);
 });
